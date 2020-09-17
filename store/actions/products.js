@@ -14,7 +14,7 @@ export const fetchProducts = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Ooops! Something went wrong");
+        throw new Error("Oops! Something went wrong");
       }
       const resData = await response.json();
 
