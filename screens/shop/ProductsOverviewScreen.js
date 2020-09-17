@@ -32,10 +32,20 @@ const ProductsOverviewScreen = (props) => {
       setError(error.message);
     }
     setIsLoading(false);
-  }, []);
+  }, [setError, setIsLoading]);
 
   useEffect(() => {
     fetchProducts();
+  }, [fetchProducts]);
+
+  useEffect(() => {
+    const willFocusSub = props.navigation.addListener(
+      "willFocus",
+      fetchProducts
+    );
+    return () => {
+      willFocusSub.remove();
+    };
   }, [fetchProducts]);
 
   const selectItemHandler = (id, title) => {
@@ -49,7 +59,11 @@ const ProductsOverviewScreen = (props) => {
     return (
       <View style={styles.center}>
         <Text>{error}</Text>
-        <Button title="Try again" onPress={fetchProducts} />
+        <Button
+          title="Try again"
+          onPress={fetchProducts}
+          color={Colors.primary}
+        />
       </View>
     );
   }
