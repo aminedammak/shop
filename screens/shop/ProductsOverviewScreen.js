@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   FlatList,
   Button,
@@ -21,15 +21,22 @@ const ProductsOverviewScreen = (props) => {
   const products = useSelector((state) => state.products.availableProducts);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
+  const fetchProducts = useCallback(async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(productActions.fetchProducts());
+    } catch (error) {
+      setError(error.message);
+    }
+    setIsLoading(false);
+  }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setIsLoading(true);
-      await dispatch(productActions.fetchProducts());
-      setIsLoading(false);
-    };
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {
@@ -37,6 +44,15 @@ const ProductsOverviewScreen = (props) => {
       productTitle: title,
     });
   };
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text>{error}</Text>
+        <Button title="Try again" onPress={fetchProducts} />
+      </View>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -63,6 +79,7 @@ const ProductsOverviewScreen = (props) => {
           image={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
+          key={itemData.item.id}
           onSelect={() => {
             selectItemHandler(itemData.item.id, itemData.item.title);
           }}

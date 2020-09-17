@@ -7,32 +7,40 @@ import Product from "../../models/product";
 
 export const fetchProducts = () => {
   return async (dispatch) => {
-    //async operation
-    const response = await fetch(
-      "https://shop-online-by-me.firebaseio.com/products.json"
-    );
-
-    const resData = await response.json();
-
-    let availableProducts = [];
-    for (let key in resData) {
-      availableProducts.push(
-        new Product(
-          key,
-          resData[key].ownerId,
-          resData[key].imageUrl,
-          resData[key].title,
-          resData[key].description,
-          resData[key].price
-        )
+    try {
+      //async operation
+      const response = await fetch(
+        "https://shop-online-by-me.firebaseio.com/products.json"
       );
-    }
 
-    console.log(availableProducts);
-    dispatch({
-      type: SET_PRODUCTS,
-      products: availableProducts,
-    });
+      if (!response.ok) {
+        throw new Error("Ooops! Something went wrong");
+      }
+      const resData = await response.json();
+
+      let availableProducts = [];
+      for (const key in resData) {
+        console.log("resDatakey", resData[key].price);
+        availableProducts.push(
+          new Product(
+            (id = key),
+            (ownerId = resData[key].ownerId),
+            (title = resData[key].title),
+            (imageUrl = resData[key].imageUrl),
+            (description = resData[key].description),
+            (price = resData[key].price)
+          )
+        );
+      }
+
+      console.log(availableProducts);
+      dispatch({
+        type: SET_PRODUCTS,
+        products: availableProducts,
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 };
 
