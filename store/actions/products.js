@@ -60,59 +60,78 @@ export const deleteProduct = (productId) => {
 export const createProduct = (title, description, imageUrl, price) => {
   return async (dispatch) => {
     //asynchronous code here
-    const response = await fetch(
-      "https://shop-online-by-me.firebaseio.com/products.json",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ownerId: "u1",
-          imageUrl,
+    try {
+      const response = await fetch(
+        "https://shop-online-by-me.firebaseio.com/products.json",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ownerId: "u1",
+            imageUrl,
+            title,
+            description,
+            price,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Problem in the product creation");
+      }
+
+      const productFromDB = await response.json();
+
+      dispatch({
+        type: CREATE_PRODUCT,
+        productData: {
+          id: productFromDB.id,
           title,
           description,
+          imageUrl,
           price,
-        }),
-      }
-    );
-
-    const productFromDB = await response.json();
-
-    dispatch({
-      type: CREATE_PRODUCT,
-      productData: {
-        id: productFromDB.id,
-        title,
-        description,
-        imageUrl,
-        price,
-      },
-    });
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
   return async (dispatch) => {
     //async stuff
-    fetch(`https://shop-online-by-me.firebaseio.com/products/${id}.json`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        imageUrl,
-      }),
-    });
+    try {
+      const response = await fetch(
+        `https://shop-online-by-me.firebaseio.com/products/${id}.json`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            imageUrl,
+          }),
+        }
+      );
 
-    dispatch({
-      type: UPDATE_PRODUCT,
-      pid: id,
-      productData: {
-        title,
-        description,
-        imageUrl,
-      },
-    });
+      if (!response.ok) {
+        throw new Error("An error in product update");
+      }
+
+      dispatch({
+        type: UPDATE_PRODUCT,
+        pid: id,
+        productData: {
+          title,
+          description,
+          imageUrl,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 };
