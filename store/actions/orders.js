@@ -1,4 +1,6 @@
 export const ADD_ORDER = "ADD_ORDER";
+export const SET_ORDERS = "SET_ORDERS";
+import Order from "../../models/order";
 
 export const addOrder = (cartItems, totalAmount) => {
   return async (dispatch) => {
@@ -32,5 +34,38 @@ export const addOrder = (cartItems, totalAmount) => {
     } catch (error) {
       throw error;
     }
+  };
+};
+
+export const fetchOrders = () => {
+  return async (dispatch) => {
+    //asynchrounous code
+    const response = await fetch(
+      "https://shop-online-by-me.firebaseio.com/orders/u1.json"
+    );
+
+    if (!response.ok) {
+      throw new Error("Problem in reading orders");
+    }
+
+    const responseData = await response.json();
+
+    let ordersLoaded = [];
+
+    for (key in responseData) {
+      ordersLoaded.push(
+        new Order(
+          key,
+          responseData[key].items,
+          responseData[key].amount,
+          new Date(responseData[key].date)
+        )
+      );
+    }
+
+    dispatch({
+      type: SET_ORDERS,
+      orders: ordersLoaded,
+    });
   };
 };

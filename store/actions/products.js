@@ -20,7 +20,6 @@ export const fetchProducts = () => {
 
       let availableProducts = [];
       for (const key in resData) {
-        console.log("resDatakey", resData[key].price);
         availableProducts.push(
           new Product(
             (id = key),
@@ -33,7 +32,6 @@ export const fetchProducts = () => {
         );
       }
 
-      console.log(availableProducts);
       dispatch({
         type: SET_PRODUCTS,
         products: availableProducts,
