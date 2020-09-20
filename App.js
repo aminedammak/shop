@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createStore, combineReducers, applyMiddleware } from "redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
 import { AppLoading } from "expo";
