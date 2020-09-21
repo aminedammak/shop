@@ -1,10 +1,11 @@
+import { keys } from "../../keys";
 export const SIGN_UP = "SIGN_UP";
 export const LOGIN = "LOGIN";
 export const signUp = (email, password) => {
   return async (dispatch) => {
     //asynchronous operations
     const response = await fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC2TBzInsxsEn-swEXvAu5nr30BZY1c6EQ",
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keys.api_key}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,7 +33,7 @@ export const login = (email, password) => {
   return async (dispatch) => {
     //asynchronous operations
     const response = await fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC2TBzInsxsEn-swEXvAu5nr30BZY1c6EQ",
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${keys.api_key}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

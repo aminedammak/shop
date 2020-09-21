@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
@@ -55,13 +56,16 @@ const AuthScreen = (props) => {
   });
 
   const [isSignUp, setIsSignUp] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
+    setIsLoading(true);
     if (isSignUp) {
-      handleSignUp();
+      await handleSignUp();
     } else {
-      handleLogin();
+      await handleLogin();
     }
+    setIsLoading(false);
   };
 
   const handleSignUp = () => {
@@ -94,12 +98,16 @@ const AuthScreen = (props) => {
     [dispatchFormState]
   );
 
+  if (isLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={50}
-      style={styles.screen}
-    >
+    <View behavior="padding" keyboardVerticalOffset={50} style={styles.screen}>
       <LinearGradient colors={["#ffedff", "#ffe3ff"]} style={styles.gradient}>
         <Card style={styles.authContainer}>
           <ScrollView>
@@ -145,7 +153,7 @@ const AuthScreen = (props) => {
           </ScrollView>
         </Card>
       </LinearGradient>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -170,6 +178,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 10,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
