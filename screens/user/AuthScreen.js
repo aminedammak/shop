@@ -1,11 +1,13 @@
-import React, { useReducer, useCallback, useState } from "react";
+import React, { useReducer, useCallback, useState, useEffect } from "react";
 import {
   ScrollView,
   View,
   KeyboardAvoidingView,
   StyleSheet,
+  Text,
   Button,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
@@ -57,19 +59,25 @@ const AuthScreen = (props) => {
 
   const [isSignUp, setIsSignUp] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
 
   const handleFormSubmit = async () => {
     setIsLoading(true);
-    if (isSignUp) {
-      await handleSignUp();
-    } else {
-      await handleLogin();
+    setError(null);
+    try {
+      if (isSignUp) {
+        await handleSignUp();
+      } else {
+        await handleLogin();
+      }
+    } catch (error) {
+      setError(error.message);
     }
     setIsLoading(false);
   };
 
-  const handleSignUp = () => {
-    dispatch(
+  const handleSignUp = async () => {
+    await dispatch(
       authActions.signUp(
         formState.inputValues.email,
         formState.inputValues.password
@@ -77,8 +85,8 @@ const AuthScreen = (props) => {
     );
   };
 
-  const handleLogin = () => {
-    dispatch(
+  const handleLogin = async () => {
+    await dispatch(
       authActions.login(
         formState.inputValues.email,
         formState.inputValues.password
@@ -98,13 +106,11 @@ const AuthScreen = (props) => {
     [dispatchFormState]
   );
 
-  if (isLoading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   return (
     <View behavior="padding" keyboardVerticalOffset={50} style={styles.screen}>
@@ -134,22 +140,30 @@ const AuthScreen = (props) => {
               onInputChange={inputChangeHandler}
               initialValue=""
             />
-            <View style={styles.buttonContainer}>
-              <Button
-                title={isSignUp ? "Sign Up" : "Login"}
-                color={Colors.primary}
-                onPress={handleFormSubmit}
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title={`Switch to ${isSignUp ? "Login" : "Sign Up"}`}
-                color={Colors.accent}
-                onPress={() => {
-                  setIsSignUp((prevState) => !prevState);
-                }}
-              />
-            </View>
+            {isLoading ? (
+              <View style={styles.center}>
+                <ActivityIndicator size="large" color={Colors.primary} />
+              </View>
+            ) : (
+              <View>
+                <View style={styles.buttonContainer}>
+                  <Button
+                    title={isSignUp ? "Sign Up" : "Login"}
+                    color={Colors.primary}
+                    onPress={handleFormSubmit}
+                  />
+                </View>
+                <View style={styles.buttonContainer}>
+                  <Button
+                    title={`Switch to ${isSignUp ? "Login" : "Sign Up"}`}
+                    color={Colors.accent}
+                    onPress={() => {
+                      setIsSignUp((prevState) => !prevState);
+                    }}
+                  />
+                </View>
+              </View>
+            )}
           </ScrollView>
         </Card>
       </LinearGradient>
