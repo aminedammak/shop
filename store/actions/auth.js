@@ -19,7 +19,16 @@ export const signUp = (email, password) => {
       );
 
       if (!response.ok) {
-        throw new Error("Something went wrong!");
+        const responseData = await response.json();
+
+        let message = "Something went wrong!";
+
+        const errorId = responseData.error.message;
+
+        if (errorId === "EMAIL_EXISTS") {
+          message = "The email address is already in use by another account";
+        }
+        throw new Error(message);
       }
 
       const resData = await response.json();
