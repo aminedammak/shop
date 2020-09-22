@@ -18,14 +18,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availableProducts: action.products,
-        userProducts: action.products.filter((item) => item.ownerId === "u1"),
+        userProducts: action.userProducts,
       };
     case CREATE_PRODUCT:
       const newProduct = new Product(
         action.productData.id,
-        "u1",
-        action.productData.title,
+        action.productData.ownerId,
         action.productData.imageUrl,
+        action.productData.title,
         action.productData.description,
         action.productData.price
       );

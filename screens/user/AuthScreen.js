@@ -57,7 +57,7 @@ const AuthScreen = (props) => {
     formIsValid: false,
   });
 
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
@@ -74,6 +74,7 @@ const AuthScreen = (props) => {
       setError(error.message);
     }
     setIsLoading(false);
+    props.navigation.navigate("Shop");
   };
 
   const handleSignUp = async () => {

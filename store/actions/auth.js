@@ -35,7 +35,11 @@ export const signUp = (email, password) => {
 
       console.log("res sign up", resData);
 
-      dispatch({ type: SIGN_UP });
+      dispatch({
+        type: SIGN_UP,
+        token: resData.idToken,
+        userId: resData.localId,
+      });
     } catch (error) {
       throw error;
     }
@@ -78,7 +82,11 @@ export const login = (email, password) => {
 
       console.log("res Login", resData);
 
-      dispatch({ type: LOGIN });
+      dispatch({
+        type: LOGIN,
+        token: resData.idToken,
+        userId: resData.localId,
+      });
     } catch (error) {
       throw error;
     }

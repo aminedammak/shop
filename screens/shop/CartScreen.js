@@ -17,6 +17,8 @@ import * as ordersActions from "../../store/actions/orders";
 
 const CartScreen = (props) => {
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
+  const userId = useSelector((state) => state.auth.userId);
+
   const cartItems = useSelector((state) => {
     const transformedCartItems = [];
     for (const key in state.cart.items) {
@@ -40,7 +42,9 @@ const CartScreen = (props) => {
     setError(null);
     setIsLoading(true);
     try {
-      await dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
+      await dispatch(
+        ordersActions.addOrder(userId, cartItems, cartTotalAmount)
+      );
     } catch (error) {
       setError(error.message);
     }

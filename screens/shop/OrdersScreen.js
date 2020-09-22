@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from "react";
-import { FlatList, Text, Platform } from "react-native";
+import { FlatList, Text, Platform, View, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import * as ordersActions from "../../store/actions/orders";
@@ -19,7 +19,13 @@ const OrdersScreen = (props) => {
   useEffect(() => {
     dispatch(ordersActions.fetchOrders());
   }, [dispatch]);
-
+  if (orders.length === 0) {
+    return (
+      <View style={styles.center}>
+        <Text>No orders found! Maybe start ordering some products?</Text>
+      </View>
+    );
+  }
   return (
     <FlatList
       data={orders}
@@ -53,3 +59,11 @@ OrdersScreen.navigationOptions = (navData) => {
 };
 
 export default OrdersScreen;
+
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
