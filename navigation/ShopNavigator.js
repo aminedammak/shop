@@ -4,8 +4,13 @@ import {
   createDrawerNavigator,
   createSwitchNavigator,
   createAppContainer,
+  DrawerItems,
 } from "react-navigation";
-import { Platform } from "react-native";
+import { Platform, View, Button } from "react-native";
+
+import { useDispatch } from "react-redux";
+import * as authActions from "../store/actions/auth";
+
 import { Ionicons } from "@expo/vector-icons";
 
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
@@ -97,6 +102,22 @@ const ShopNavigator = createDrawerNavigator(
   {
     contentOptions: {
       activeTintColor: Colors.primary,
+    },
+    contentComponent: (props) => {
+      const dispatch = useDispatch();
+      return (
+        <View>
+          <DrawerItems {...props} />
+          <Button
+            title="Logout"
+            color={Colors.primary}
+            onPress={() => {
+              dispatch(authActions.logout());
+              props.navigation.navigate("Auth");
+            }}
+          />
+        </View>
+      );
     },
   }
 );

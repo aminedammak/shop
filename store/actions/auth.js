@@ -1,5 +1,6 @@
 import { keys } from "../../keys";
 export const AUTHENTICATE = "AUTHENTICATE";
+export const LOGOUT = "LOGOUT";
 
 import { AsyncStorage } from "react-native";
 
@@ -110,6 +111,10 @@ export const login = (email, password) => {
       throw error;
     }
   };
+};
+
+export const logout = () => {
+  return { type: LOGOUT };
 };
 
 export const saveDataToStorage = async (userId, token, expirationDate) => {
