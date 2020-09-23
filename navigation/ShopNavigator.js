@@ -6,7 +6,7 @@ import {
   createAppContainer,
   DrawerItems,
 } from "react-navigation";
-import { Platform, View, Button } from "react-native";
+import { Platform, View, Button, SafeAreaView } from "react-native";
 
 import { useDispatch } from "react-redux";
 import * as authActions from "../store/actions/auth";
@@ -106,16 +106,18 @@ const ShopNavigator = createDrawerNavigator(
     contentComponent: (props) => {
       const dispatch = useDispatch();
       return (
-        <View>
-          <DrawerItems {...props} />
-          <Button
-            title="Logout"
-            color={Colors.primary}
-            onPress={() => {
-              dispatch(authActions.logout());
-              props.navigation.navigate("Auth");
-            }}
-          />
+        <View style={{ flex: 1, paddingTop: 20 }}>
+          <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
+            <DrawerItems {...props} />
+            <Button
+              title="Logout"
+              color={Colors.primary}
+              onPress={() => {
+                dispatch(authActions.logout());
+                props.navigation.navigate("Auth");
+              }}
+            />
+          </SafeAreaView>
         </View>
       );
     },
