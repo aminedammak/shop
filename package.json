@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -26,7 +27,11 @@
   },
   "devDependencies": {
     "babel-preset-expo": "^8.2.3",
+    "jest": "^26.4.2",
     "redux-devtools-extension": "^2.13.8"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "react-native"
+  }
 }
