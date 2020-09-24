@@ -11,7 +11,6 @@ export default StartupScreen = (props) => {
     const getItems = async () => {
       const userData = await AsyncStorage.getItem("userData");
       if (!userData) {
-        console.log("no user data");
         props.navigation.navigate("Auth");
         return;
       }
@@ -22,14 +21,23 @@ export default StartupScreen = (props) => {
 
       const now = new Date().toISOString();
 
-      if (expiryDate < now || !token || !userId) {
+      const expirationDate = new Date(expiryDate);
+
+      if (expirationDate < now || !token || !userId) {
         props.navigation.navigate("Auth");
         return;
       }
 
+      const timeNow = new Date().getTime();
+      const expiryTime = expirationDate.getTime();
+      console.log("expiryTime", expiryTime);
+      console.log("timeNow", timeNow);
+
+      const expiresIn = expiryTime - timeNow;
+
       props.navigation.navigate("Shop");
-      dispatch(authActions.authenticate(userId, token));
-      console.log("user data");
+      dispatch(authActions.authenticate(userId, token, expiresIn));
+      console.log("expiresIn", expiresIn);
     };
     getItems();
   }, []);
